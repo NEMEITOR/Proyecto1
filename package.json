@@ -13,7 +13,7 @@
   },
 
   "scripts": {
-    "dev": "nodemon -e js ./src/server.js"
+    "dev": "nodemon -e js backend/src/server.js"
   },
 
   "devDependencies": {
