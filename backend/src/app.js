@@ -5,7 +5,7 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-// Importar rutas
+// se importan rutas
 const userRoutes = require('./routes/user.routes');
 const authRoutes = require('./routes/auth.routes');
 const projectRoutes = require('./routes/project.routes');

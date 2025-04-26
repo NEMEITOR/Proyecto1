@@ -5,7 +5,7 @@ const { authenticateToken, checkRole } = require('../middleware/auth.middleware'
 const ROLES = require('../utils/constants');
 const errorHandler = require('../middleware/error.middleware');
 
-// Ruta de usuarios
+// Ruta de los usuarios
 router.post('/users/create', authenticateToken, checkRole([ROLES.ADMIN]), userController.createUser);
 router.put('/users/update/:id', authenticateToken, checkRole([ROLES.ADMIN]), userController.updateUser);
 router.get('/users', authenticateToken, checkRole([ROLES.ADMIN]), userController.getAllUsersByAdministradorId);

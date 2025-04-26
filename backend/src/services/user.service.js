@@ -1,6 +1,8 @@
 const User = require('../models/user.model'); 
 const bcrypt = require('bcryptjs');
 
+
+// Crea usuarios
 exports.createUser = async (nombre, email, password, rol_id, administrador_id) => {
     try {
         const userExists = await User.findOne({ where: { email } });
@@ -24,11 +26,12 @@ exports.createUser = async (nombre, email, password, rol_id, administrador_id) =
     }
 };
 
+// Actualiza usuarios
 exports.updateUser = async (id, nombre, email, rol_id, administrador_id, admin_from_token) => {
     try {
         const user = await User.findByPk(id);
         if (user.administrador_id !== admin_from_token) {
-            throw new Error('Acceso denegado, este usuario no esta bajo su administración');
+            throw new Error('Acceso incorrecto, este usuario no esta bajo su administración');
         }
 
         if (!user) {
@@ -38,7 +41,7 @@ exports.updateUser = async (id, nombre, email, rol_id, administrador_id, admin_f
         if (email && email !== user.email) {
             const userExists = await User.findOne({ where: { email } });
             if (userExists) {
-                throw new Error('El email ya está en uso');
+                throw new Error('El email ya esta en uso');
             }
         }
         await user.update({
@@ -54,6 +57,7 @@ exports.updateUser = async (id, nombre, email, rol_id, administrador_id, admin_f
     }
 };
 
+
 exports.getAllUsersByAdministradorId = async (administrador_id, email) => {
     try {
         const whereClause = { administrador_id };
@@ -67,7 +71,26 @@ exports.getAllUsersByAdministradorId = async (administrador_id, email) => {
     }
 }
 
+// Elimina usuarios
+exports.deleteUser = async (id, admin_from_token) => {
+    try {
+        const user = await User.findByPk(id);
+        if (user.administrador_id !== admin_from_token) {
+            throw new Error('Acceso denegado, este usuario no esta bajo su administración');
+        }
 
+        if (!user) {
+            throw new Error('Usuario no encontrado');
+        }
+
+        await user.destroy();
+        return { message: 'Usuario eliminado con éxito' };
+    } catch (err) {
+        throw new Error(`Error al eliminar el usuario: ${err.message}`);
+    }
+};
+
+// Consulta los usuarios
 exports.getAllUsersByRolId = async (rol_id) => {
     try {
         const users = await User.findAll({ where: { rol_id }, attributes: { exclude: ['password'] }});
